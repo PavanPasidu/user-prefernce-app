@@ -1,5 +1,5 @@
 ````markdown
-#🚀 User Preference App (Webix + Django)
+# 🚀 User Preference App (Webix + Django)
 
 A sleek and responsive full-stack **User Preference App** built with **Webix** for the frontend and **Django** for the backend.  # 🚀 User Preference App (Webix)
 
