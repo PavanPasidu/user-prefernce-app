@@ -1,5 +1,3 @@
----
-
 ````markdown
 # 🚀 User Preference App (Webix + Django)
 
@@ -149,7 +147,5 @@ Feel free to open issues for suggestions or bugs.
 MIT License © [PavanPasidu](https://github.com/PavanPasidu)
 
 ```
-
----
 
 
