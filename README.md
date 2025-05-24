@@ -1,123 +1,92 @@
+---
 
+````markdown
+# 🚀 User Preference App (Webix + Django)
+
+A sleek and responsive full-stack **User Preference App** built with **Webix** for the frontend and **Django** for the backend.  
+Users can manage their **account**, **notifications**, **privacy**, and **theme settings** easily.
 
 ---
 
-```markdown
-# 🧑‍💻 User Preference Web App
+## ✨ Features
 
-A full-stack web application that allows users to manage their **account**, **notifications**, **privacy**, and **appearance settings**.  
-Built using **Django (Python)** for the backend and **Webix (JavaScript)** for the frontend.
-
----
-
-## 📁 Project Structure
-
-```
-
-user-preference-app/
-├── backend/           # Django backend
-└── frontend/          # Webix frontend
-
-````
+✅ **User-Friendly Interface** – Smooth Webix-based UI for an interactive experience.  
+✅ **Account & Preference Management** – Update profile, notifications, privacy, and appearance.  
+✅ **Live Preview & Interactivity** – Theme changes and settings reflect in real-time.  
+✅ **Component-Based Design** – Organized structure with reusable Webix modules.  
+✅ **Backend API** – Django RESTful endpoints with image upload support.  
+✅ **Profile Images** – Upload, store, and display user avatars.
 
 ---
 
-## ⚙️ Requirements
+## 🧰 Tech Stack
 
-- Python 3.10+
-- Node.js + npm
-- Git
+| Frontend | Backend | Database |
+|----------|---------|----------|
+| Webix UI | Django  | SQLite   |
+| JavaScript | Django REST Framework | File-based image storage |
 
 ---
 
-## 🚀 Installation & Setup Guide
+## ⚙️ Setup Guide
 
-### 📥 1. Clone the Repository
+### 📦 Prerequisites
+
+- 🐍 Python 3.10+
+- 🟢 Node.js & npm
+- 🌐 Git
+
+---
+
+### 🚀 Quick Start
+
+#### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/PavanPasidu/user-prefernce-app.git
 cd user-prefernce-app
 ````
 
----
-
-### 🛠️ 2. Backend Setup (Django)
+#### 2. Backend Setup (Django)
 
 ```bash
 cd backend
-
-# Create and activate virtual environment (Python 3.10)
 py -3.10 -m venv env
-env\Scripts\activate   # Windows
+env\Scripts\activate     # Windows
 # source env/bin/activate  # macOS/Linux
 
-# Install dependencies
 pip install -r requirements.txt
-
-# Apply migrations
 python manage.py makemigrations
 python manage.py migrate
-
-# (Optional) Create superuser
-python manage.py createsuperuser
-
-# Start development server
 python manage.py runserver
 ```
 
-🌐 Visit: `http://127.0.0.1:8000/`
+🟠 Visit: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
----
+#### 3. Frontend Setup (Webix)
 
-### 💻 3. Frontend Setup (Webix)
-
-Open a **new terminal** window:
+In a new terminal:
 
 ```bash
 cd frontend
-
-# Install frontend dependencies
 npm install
-
-# Start the frontend using Live Server
 npm run live-server
 ```
 
-🌐 Visit: `http://127.0.0.1:8080/` (or the URL shown in terminal)
+🟢 Visit: [http://127.0.0.1:8080/](http://127.0.0.1:8080/)
 
 ---
 
-## 🗂️ Folder Structure Overview
+## 🗂️ Folder Structure
 
-### 🔙 Backend (`/backend`)
-
-```
-backend/
-├── config/                # Django project config
-│   ├── settings.py
-│   ├── urls.py
-│   └── ...
-├── core/                  # Django app
-│   ├── models.py
-│   ├── views.py
-│   ├── serializers.py
-│   └── urls.py
-├── profile_images/        # User uploaded profile images
-├── static/
-├── db.sqlite3
-└── requirements.txt
-```
-
-### 🔜 Frontend (`/frontend`)
+### 📁 `/frontend/`
 
 ```
-frontend/
 ├── assets/
-│   ├── audio/
-│   ├── data/
-│   └── images/
-├── css/
-│   └── styles.css
+│   ├── audio/        # Custom notification sounds
+│   ├── data/         # Static JSON/data
+│   └── images/       # Icons, profile avatars
+├── css/styles.css    # Global styles
 ├── js/
 │   ├── components/
 │   │   ├── settings/
@@ -126,8 +95,8 @@ frontend/
 │   │   │   ├── privacyForm.js
 │   │   │   └── themeForm.js
 │   │   ├── login.js
-│   │   ├── navbar.js
-│   │   └── signup.js
+│   │   ├── signup.js
+│   │   └── navbar.js
 │   ├── pages/
 │   │   ├── home.js
 │   │   ├── logouthome.js
@@ -139,35 +108,39 @@ frontend/
 │       ├── pofileUtil.js
 │       ├── settingMenu.js
 │       └── themeManage.js
-├── app.js
 ├── index.html
-└── package.json
+└── app.js
+```
+
+### 🛠️ `/backend/`
+
+```
+├── config/                # Django project config
+│   ├── settings.py
+│   └── urls.py
+├── core/                  # Main Django app
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   └── serializers.py
+├── profile_images/        # Uploaded profile pictures
+├── static/                # Static files
+├── db.sqlite3
+└── requirements.txt
 ```
 
 ---
 
-## ✅ Features
+## 🖼️ Screenshots (Optional)
 
-* 🔐 User authentication (login, signup)
-* 👤 Account settings update
-* 🔔 Notification toggle
-* 🔒 Privacy control
-* 🎨 Theme customization
-* 🖼️ Profile image upload
-* Fully responsive and dynamic UI (Webix)
+> *Include UI screenshots of profile settings, theme switch, and dashboard here.*
 
 ---
 
-## 📸 Screenshots (Optional)
+## 🤝 Contribution
 
-*Add screenshots here if needed.*
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome!
-Open issues or PRs for bug fixes or improvements.
+Pull requests are welcome!
+Feel free to open issues for suggestions or bugs.
 
 ---
 
@@ -176,5 +149,7 @@ Open issues or PRs for bug fixes or improvements.
 MIT License © [PavanPasidu](https://github.com/PavanPasidu)
 
 ```
+
+---
 
 
