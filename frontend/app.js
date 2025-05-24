@@ -5,17 +5,26 @@ import {settingsMenu} from "./js/utils/settingMenu.js";
 import { settingsView } from "./js/pages/settings.js";
 import { homePage } from "./js/pages/home.js";
 import { logouthomePage } from "./js/pages/logouthome.js";
-import { applyThemeSettings } from "./js/utils/themeManage.js";
+import { fetchThemeSettings, applyThemeSettings } from "./js/components/settings/themeForm.js";
+import {loadProfileImage} from "./js/utils/imageLoader.js";
 
 // console.log("app.js loaded");
 // logouthomePage
 
 webix.ready(() => {
-  const savedSettings = JSON.parse(localStorage.getItem("themeSettings"));
-  applyThemeSettings(savedSettings);
-  // console.log($$("savedSettings"));
-
   const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+  const savedTheme = localStorage.getItem("customTheme");
+    if (savedTheme) {
+        const themeSettings = JSON.parse(savedTheme);
+        applyThemeSettings(themeSettings);
+
+        // Also update the forms if needed:
+        $$("color-settings")?.setValues(themeSettings, true);
+        $$("font-settings")?.setValues(themeSettings, true);
+        $$("layout-settings")?.setValues(themeSettings, true);
+        $$("Custom_mode")?.setValue(1);  // set the checkbox back to ON
+    }
+
 
   webix.ui({
     id: "mainLayout",
@@ -25,15 +34,34 @@ webix.ready(() => {
         cells: loggedUser ? [homePage, settingsView] : [logouthomePage],
         animate: { type: "slide", subtype: "together" },
         id: "mainViews"
-      }
+      },
+      // loadProfileImage()
     ]
   });
+  // $$("userAvatarBlock").refresh();
 
   webix.ui(loginWindow);
   webix.ui(signupWindow);
   // $$("loginWindow").show();
   webix.ui(settingsMenu);
   // console.log($$("loginWindow"));
+
+  // $$("settingsView").attachEvent("onViewShow", function(id) {
+  //   if (id === "settingsView") {
+  //     const savedTheme = localStorage.getItem("customTheme");
+  //     if (savedTheme) {
+  //       const themeSettings = JSON.parse(savedTheme);
+  //       // Update all theme-related forms
+  //       $$("color-settings")?.setValues(themeSettings, true);
+  //       $$("font-settings")?.setValues(themeSettings, true);
+  //       $$("layout-settings")?.setValues(themeSettings, true);
+  //       $$("Custom_mode")?.setValue(1);
+  //       // Reapply CSS variables globally
+  //       applyThemeSettings(themeSettings);
+  //     }
+  //   }
+  // });
+
 
   webix.ui({
     view: "popup",
