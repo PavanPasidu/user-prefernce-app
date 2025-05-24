@@ -29,5 +29,8 @@ urlpatterns = [
     path('account/settings/', views.account_settings_view, name='account-settings'),
     path('account/change-password/', views.change_password, name='change-password'),
     path('theme-settings/', views.theme_settings_view, name='theme-settings'),
+    path("upload/", views.upload_profile_image),
+    path("remove-image/", views.remove_profile_image),
+    path('profile/image/', views.get_profile_image),
 ]
 

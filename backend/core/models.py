@@ -89,6 +89,7 @@ class AccountSettings(models.Model):
     fullname = models.CharField(max_length=100)
     dob = models.DateField(null=True, blank=True)
     gender = models.CharField(max_length=10, choices=[("Male", "Male"), ("Female", "Female"), ("Other", "Other")])
+    aboutme = models.TextField(blank=True, default="")
 
     def __str__(self):
         return f"{self.user.username}'s Account Settings"
@@ -112,3 +113,13 @@ class ThemeSetting(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Theme Settings"
+    
+def user_directory_path(instance, filename):
+    return f"profile_images/{instance.user.id}/{filename}"
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_image = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
+
+    def __str__(self):
+        return f"Profile of {self.user.username}, Image: {self.profile_image.url if self.profile_image else 'No Image'}"

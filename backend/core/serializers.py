@@ -48,6 +48,7 @@ class FullAccountSettingsSerializer(serializers.Serializer):
     fullname = serializers.CharField()
     dob = serializers.DateField()
     gender = serializers.CharField()
+    aboutme = serializers.CharField(allow_blank=True, required=False)
 
     def update(self, instance, validated_data):
         user = instance.user
@@ -58,6 +59,7 @@ class FullAccountSettingsSerializer(serializers.Serializer):
         instance.fullname = validated_data.get("fullname", instance.fullname)
         instance.dob = validated_data.get("dob", instance.dob)
         instance.gender = validated_data.get("gender", instance.gender)
+        instance.aboutme = validated_data.get("aboutme", instance.aboutme)
         instance.save()
         return instance
     

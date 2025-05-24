@@ -1,23 +1,29 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from django.contrib.auth import update_session_auth_hash
+from django.conf import settings
+from django.core.files.storage import default_storage
+
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
 # from django.views.decorators.csrf import csrf_exempt
 
 from .serializers import UserSerializer, UserSettingsSerializer, PrivacySettingsSerializer
 from .models import UserSettings, PrivacySettings
-from rest_framework_simplejwt.tokens import RefreshToken
 from .models import NotificationSettings
 from .serializers import NotificationSettingsSerializer
 from .models import AccountSettings
 from .serializers import FullAccountSettingsSerializer
-from django.contrib.auth import update_session_auth_hash
 from .serializers import ChangePasswordSerializer
 from .models import ThemeSetting
 from .serializers import ThemeSettingsSerializer
+from .models import Profile
+
+import os
 
 # @csrf_exempt
 @api_view(['POST'])
@@ -150,6 +156,7 @@ def account_settings_view(request):
     user = request.user
     try:
         settings = user.account_settings
+        # print(settings)
     except AccountSettings.DoesNotExist:
         settings = AccountSettings.objects.create(user=user)
 
@@ -159,7 +166,8 @@ def account_settings_view(request):
             'email': user.email,
             'fullname': settings.fullname,
             'dob': settings.dob,
-            'gender': settings.gender
+            'gender': settings.gender,
+            'aboutme': settings.aboutme,
         }
         return Response(data)
 
@@ -204,3 +212,71 @@ def theme_settings_view(request):
             serializer.save()
             return Response({"message": "Theme settings updated successfully"})
         return Response(serializer.errors, status=400)
+    
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def upload_profile_image(request):
+    image = request.FILES.get('image')
+    if not image:
+        return Response({"error": "No image uploaded."}, status=400)
+
+    user = request.user
+    user_folder = os.path.join(settings.MEDIA_ROOT, str(user.id))
+    # print("User ID:", user.id)
+
+    if not os.path.exists(user_folder):
+        os.makedirs(user_folder)
+
+    # Clear old images in user folder
+    for file in os.listdir(user_folder):
+        file_path = os.path.join(user_folder, file)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+
+    image_path = os.path.join(user_folder, image.name)
+    with default_storage.open(image_path, 'wb+') as dest:
+        for chunk in image.chunks():
+            dest.write(chunk)
+
+    image_url = request.build_absolute_uri(settings.MEDIA_URL + f"{str(user.id)}/{image.name}")
+    return Response({"filePath": image_url}, status=200)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def remove_profile_image(request):
+    user = request.user
+    user_folder = os.path.join(settings.MEDIA_ROOT, str(user.id))
+
+    if os.path.exists(user_folder):
+        for file in os.listdir(user_folder):
+            file_path = os.path.join(user_folder, file)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+        return Response({"detail": "Image removed."})
+    
+    return Response({"error": "No image found to remove."}, status=404)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_profile_image(request):
+    user = request.user
+    user_folder = os.path.join(settings.MEDIA_ROOT, str(user.id))
+
+    if os.path.exists(user_folder):
+        for file in os.listdir(user_folder):
+            file_path = os.path.join(user_folder, file)
+            if os.path.isfile(file_path):
+                # convert local path to URL:
+                relative_path = os.path.relpath(file_path, settings.MEDIA_ROOT)
+                image_url = request.build_absolute_uri(settings.MEDIA_URL + relative_path.replace("\\", "/"))
+                return Response({"image_url": image_url})
+
+    return Response({"image_url": None})
+
+
+
+
