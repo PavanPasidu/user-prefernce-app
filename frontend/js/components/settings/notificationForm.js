@@ -1,3 +1,5 @@
+import { authAjax } from "../../utils/authAjax.js";
+
 export const notificationForm = {
   id: "notificationFormWrapper",
   view: "scrollview",
@@ -160,11 +162,8 @@ export const notificationForm = {
             view: "button", value: "Save", css: "webix_primary",
             click: function () {
               const form = $$("notificationForm");
-              const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-              const token = loggedUser.access;
               if (form.validate()) {
                 const values = form.getValues(); 
-                // change time to corrrect format
                 ["dndStart", "dndEnd"].forEach(key => {
                   const time = values[key];
                   if (time instanceof Date) {
@@ -173,12 +172,8 @@ export const notificationForm = {
                     values[key] = `${hours}:${minutes}`;
                   }
                 });
-                console.log(values);
 
-                webix
-                  .ajax()
-                  .headers({ "Authorization": `Bearer ${token}` })
-                  .post("http://127.0.0.1:8000/api/save-notification-settings/", values)
+                authAjax("http://127.0.0.1:8000/api/save-notification-settings/", "POST", values)
                   .then(() => {
                     webix.message("Notification settings saved.");
                   })
@@ -186,7 +181,9 @@ export const notificationForm = {
                     webix.message({ type: "error", text: "Failed to save notification settings." });
                   });
               }
-            },
+            }
+
+            //--------------- 
           },
           {
             view: "button", value: "Cancel",
@@ -230,12 +227,7 @@ export const notificationForm = {
 
 // Helper function to load settings from server
 function loadNotificationSettings() {
-  const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-  const token = loggedUser.access;
-  webix
-    .ajax()
-    .headers({ "Authorization": `Bearer ${token}` })
-    .get("http://127.0.0.1:8000/api/get-notification-settings/")
+  authAjax("http://127.0.0.1:8000/api/get-notification-settings/", "GET")
     .then((data) => {
       const settings = data.json();
       if (settings) {
@@ -247,6 +239,7 @@ function loadNotificationSettings() {
       webix.message({ type: "error", text: "Failed to load notification settings." });
     });
 }
+
 
 // // Call load on form initialization
 // loadNotificationSettings();

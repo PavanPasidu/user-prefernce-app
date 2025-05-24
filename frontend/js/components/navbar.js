@@ -36,11 +36,17 @@ export const navbar = {
       },
       {
         view: "template",
+        id: "userAvatarBlock2",
         tooltip: "Profile",
-        template: "<div class='avatar-wrapper'><img src='./assets/images/pavan.jpeg' alt='Profile' class='mainphoto'/> <span class='webix_icon mdi mdi-circle status green'></span> </div>",
+        template: "",
         width: 80,
         borderless: true,
         css: "avatar spaced",
+        // on: {
+        //   onAfterRender: webix.once(function () {
+        //     loadProfileImage();
+        //   })
+        // },
         onClick: {
           "avatar-wrapper": function () {
             const node = this.$view;

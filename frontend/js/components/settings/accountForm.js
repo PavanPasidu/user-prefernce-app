@@ -1,5 +1,6 @@
 import { personalSection, passwordSection } from "../../utils/accountUtil.js";
 import { profileSection } from "../../utils/pofileUtil.js";
+import { authAjax } from "../../utils/authAjax.js";
 
 export const accountForm = {
   id: "accountForm",
@@ -33,29 +34,29 @@ export const accountForm = {
                 minWidth: 150,
                 maxWidth: 300,
                 align: "center",
-                click: function () {
+                click: async function () {
+
                   const profileData = $$("profileForm").getValues();
+                  // console.log("profile: ",$$("profileForm").getValues());
                   const personalData = $$("personalForm").getValues();
+                  // console.log("personal accountform:",$$("personalForm").getValues());
                   const passwordData = {
                     oldPassword: $$('oldPwd').getValue(),
                     newPassword: $$('newPwd').getValue(),
                     confirmPassword: $$('confirmPwd').getValue()
                   };
-                  const payload = { ...profileData, ...personalData, ...passwordData };
+                  const payload = { ...profileData, ...personalData,...passwordData };
+                  console.log("Payload:",payload);
 
-                  const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-                  const token = loggedUser.access;
+                  // const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+                  // const token = loggedUser.access;
 
-                  webix.ajax()
-                  .headers({ "Authorization": "Bearer " + token })
-                  .post("http://127.0.0.1:8000/api/account/settings/", payload, {
-                    error: function (text, data, xhr) {
-                      webix.message({ type: "error", text: xhr.responseText });
-                    },
-                    success: function () {
-                      webix.message("All changes saved successfully!");
-                    }
-                  });
+                  try {
+                    await authAjax("http://127.0.0.1:8000/api/account/settings/", "POST", payload);
+                    webix.message("All changes saved successfully!");
+                  } catch (err) {
+                    webix.message({ type: "error", text: err.responseText || "Error saving settings." });
+                  }
                 }
               },
             ]
@@ -65,26 +66,31 @@ export const accountForm = {
     }
   ],
   on: {
-    onViewShow: function () {
-      const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-      const token = loggedUser?.access;
+    onViewShow: async function () {
+      try {
+        const res = await authAjax("http://127.0.0.1:8000/api/account/settings/");
+        const data = await res.json();
 
-      if (!token) {
-        console.warn("No access token found.");
-        return;
+        // Filter fields specific to each form
+        const profileData = {
+          username: data.username,
+          email: data.email,
+        };
+
+        const personalData = {
+          fullname: data.fullname,
+          gender: data.gender,
+          dob: data.dob,
+          aboutme: data.aboutme,
+        };
+
+        $$("profileForm")?.setValues(profileData);
+        $$("personalForm")?.setValues(personalData);
+        $$("aboutMeBlock")?.refresh();
+      } catch (err) {
+        console.error("Error fetching account settings:", err);
       }
-
-      webix.ajax()
-        .headers({ "Authorization": "Bearer " + token })
-        .get("http://127.0.0.1:8000/api/account/settings/")
-        .then(res => {
-          const data = res.json();
-          $$("profileForm")?.setValues(data);
-          $$("personalForm")?.setValues(data);
-        })
-        .fail(err => {
-          console.error("Error fetching account settings:", err);
-        });
     }
   },
+
 };

@@ -1,6 +1,6 @@
 import { luminance, getContrast } from "../../utils/themeManage.js";
 
-function applyThemeSettings(settings) {
+export function applyThemeSettings(settings) {
     document.body.style.setProperty("--primary-color", settings.primary_color);
     document.body.style.setProperty("--secondary-color", settings.secondary_color);
     document.body.style.setProperty("--background-color", settings.background_color);
@@ -11,15 +11,17 @@ function applyThemeSettings(settings) {
 
     document.body.classList.toggle("custom-theme", settings.Custom_mode === 1);
     document.body.classList.toggle("dark-theme", settings.dark_mode === 1);
+    // console.log("theme change success")
 }
 
-function fetchThemeSettings() {
+export function fetchThemeSettings() {
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
     const token = loggedUser.access;
                 
     return webix.ajax().headers({"Authorization": `Bearer ${token}`}).get("http://127.0.0.1:8000/api/theme-settings/").then((res) => {
-        if (res.json().success) {
-            return res.json().data;
+        // console.log("res:",res.json())
+        if (res.json()) {
+            return res.json();
         }
         return null;
     });
@@ -197,6 +199,20 @@ export const themeForm = {
                                                 .queryView({ name: "dark_mode" })
                                                 .setValue(0);
                                         }
+
+                                        // Get current form values
+                                        const colorValues = $$("color-settings").getValues();
+                                        const fontValues = $$("font-settings").getValues();
+                                        const layoutValues = $$("layout-settings").getValues();
+
+                                        const allValues = {
+                                                ...colorValues,
+                                                ...fontValues,
+                                                ...layoutValues,
+                                        };
+                                        applyThemeSettings(allValues);
+                                        localStorage.setItem("customTheme", JSON.stringify(allValues));
+
                                     },
                                 },
                             },
@@ -267,7 +283,8 @@ export const themeForm = {
 
                             // Save to backend
                             const saveRes = await saveThemeSettings(allValues);
-                            if (saveRes.success) {
+                            // console.log("save res",saveRes)
+                            if (saveRes) {
                                 webix.message({
                                     type: "success",
                                     text: "Theme settings saved and applied!",
@@ -335,6 +352,7 @@ export const themeForm = {
         onViewShow: async function () {
             // Load saved settings from backend on view show
             const savedSettings = await fetchThemeSettings();
+            // console.log("saved sett theme", savedSettings)
             if (savedSettings) {
                 $$("color-settings").setValues({
                     primary_color: savedSettings.primary_color,
@@ -352,9 +370,10 @@ export const themeForm = {
                     dark_mode: savedSettings.dark_mode,
                     Custom_mode: savedSettings.Custom_mode,
                 });
-
-                applyThemeSettings(savedSettings);
+                // console.log("saved layout theme", $$("layout-settings").getValues())
+                // applyThemeSettings(savedSettings);
             }
+            // applyThemeSettings(savedSettings);
         },
     },
 

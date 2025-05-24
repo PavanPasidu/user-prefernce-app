@@ -1,7 +1,8 @@
 import {accountForm} from "../components/settings/accountForm.js";
 import {notificationForm} from "../components/settings/notificationForm.js";
 import {privacyForm} from "../components/settings/privacyForm.js";
-import {themeForm} from "../components/settings/themeForm.js";
+import {themeForm,applyThemeSettings} from "../components/settings/themeForm.js";
+
 
 export const settingsView = {
   id: "settingsView",
@@ -24,6 +25,21 @@ export const settingsView = {
       on: {
         onChange: function (tabId) {
           $$("settingsContent").setValue(tabId); // switch content
+
+          if (tabId === "notificationFormWrapper" || "privacyForm" || "themeForm" || "accountForm") {
+            const savedTheme = localStorage.getItem("customTheme");
+            if (savedTheme) {
+              const themeSettings = JSON.parse(savedTheme);
+              // Apply theme to the app
+              applyThemeSettings(themeSettings);
+              // Update the forms to show saved values
+              $$("color-settings")?.setValues(themeSettings, true);
+              $$("font-settings")?.setValues(themeSettings, true);
+              $$("layout-settings")?.setValues(themeSettings, true);
+              // Set the custom mode checkbox
+              $$("Custom_mode")?.setValue(themeSettings.Custom_mode || 0);
+            }
+          }
         }
       }
     },

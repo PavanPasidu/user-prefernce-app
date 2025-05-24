@@ -27,29 +27,38 @@ export const personalSection = {
       name: "gender",
       labelWidth: 120,
       options: ["Male", "Female", "Other"]
-    }
+    },
+    {
+      view: "text",
+      label: "About me",
+      name: "aboutme",
+      labelWidth: 120,
+      required: false,
+      value: "About me"
+    },
   ],
   rules: {
     fullname: webix.rules.isNotEmpty,
     dob: webix.rules.isNotEmpty
   },
-  on: {
-    onAfterRender: function () {
-      const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-      if (!loggedUser?.access) return;
+  // on: {
+  //   onAfterRender: function () {
+  //     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+  //     if (!loggedUser?.access) return;
 
-      const token = loggedUser.access;
-      webix.ajax()
-        .headers({ "Authorization": "Bearer " + token })
-        .get("http://127.0.0.1:8000/api/account/settings/", function (res) {
-          const data = res.json();
-          $$("personalForm")?.setValues(data);
-        })
-        .fail(() => {
-          webix.message({ type: "error", text: "Failed to load personal details" });
-        });
-    }
-  }
+  //     const token = loggedUser.access;
+  //     webix.ajax()
+  //       .headers({ "Authorization": "Bearer " + token })
+  //       .get("http://127.0.0.1:8000/api/account/settings/", function (res) {
+  //         const data = res.json();
+  //         console.log("get acc daata :",data);
+  //         $$("personalForm")?.setValues(data);
+  //       })
+  //       .fail(() => {
+  //         webix.message({ type: "error", text: "Failed to load personal details" });
+  //       });
+  //   }
+  // }
 };
 
 
