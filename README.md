@@ -127,13 +127,6 @@ npm run live-server
 └── requirements.txt
 ```
 
----
-
-## 🖼️ Screenshots (Optional)
-
-> *Include UI screenshots of profile settings, theme switch, and dashboard here.*
-
----
 
 ## 🤝 Contribution
 
@@ -142,10 +135,5 @@ Feel free to open issues for suggestions or bugs.
 
 ---
 
-## 📄 License
-
-MIT License © [PavanPasidu](https://github.com/PavanPasidu)
-
-```
 
 
