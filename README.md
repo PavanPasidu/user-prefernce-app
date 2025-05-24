@@ -177,7 +177,4 @@ MIT License © [PavanPasidu](https://github.com/PavanPasidu)
 
 ```
 
----
 
-✅ **Paste this entire block into `README.md`** and commit it. You’re done! Let me know if you want badges, screenshots, or hosted link support added.
-```
