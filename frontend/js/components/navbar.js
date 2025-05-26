@@ -1,5 +1,6 @@
 import { loginWindow } from "./login.js";
 import {homePage} from "../pages/home.js";
+import {signupWindow} from "./signup.js";
 
 let isLogin = JSON.parse(localStorage.getItem("loggedUser")) || false;
 console.log(isLogin);
@@ -61,12 +62,26 @@ export const navbar = {
         {},
         {
           view: "button",
-          label: "Login / Signup",
+          label: "Login",
           css: "webix_primary",
           width: 120,
           click: () => {
             // fake login action for demo
             $$("loginWindow").show();
+            document.body.style.overflow = "visible";
+            // localStorage.setItem("loggedUser", true);
+            // location.reload(); // reload to re-render navbar
+          },
+        },
+        // {},
+        {
+          view: "button",
+          label: "Signup",
+          css: "webix_primary",
+          width: 120,
+          click: () => {
+            // fake login action for demo
+            $$("signupWindow").show();
             document.body.style.overflow = "visible";
             // localStorage.setItem("loggedUser", true);
             // location.reload(); // reload to re-render navbar
